@@ -1,0 +1,80 @@
+{
+  "name": "offline-cyber-ide",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Offline-first general-purpose desktop IDE with optional local AI assistance",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "build:ui": "vite build",
+    "typecheck": "tsc --noEmit",
+    "desktop": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on tcp:5173 && electron .\"",
+    "start": "electron .",
+    "make:icon": "python scripts/make-icon.py",
+    "dist:win": "npm run build && electron-builder --win nsis portable"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "lucide-react": "^0.468.0",
+    "monaco-editor": "^0.52.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^33.2.1",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "dev.nightjar.ide",
+    "productName": "Nightjar",
+    "files": [
+      "dist/**",
+      "electron/**",
+      "build/icon.ico",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "llama-b11852-bin-win-cpu-x64",
+        "to": "llama-b11852-bin-win-cpu-x64",
+        "filter": [
+          "*.dll",
+          "llama-server.exe",
+          "LICENSE*"
+        ]
+      }
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nightjar"
+    },
+    "portable": {
+      "artifactName": "Nightjar-${version}-portable.${ext}"
+    }
+  }
+}

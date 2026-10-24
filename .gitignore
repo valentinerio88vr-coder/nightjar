@@ -1,0 +1,10 @@
+node_modules/
+dist/
+release/
+models/
+*.gguf
+llama-b*-bin-win-*/
+.env
+.env.*
+!.env.example
+npm-debug.log*
